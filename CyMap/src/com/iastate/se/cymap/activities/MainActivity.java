@@ -1,17 +1,17 @@
 package com.iastate.se.cymap.activities;
 
-import com.iastate.se.cymap.R;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.iastate.se.cymap.R;
 
 /**
  * Note: Do not set the content view of each activity from this page. The
@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
 		thisCtx = this;
 		setContentView(R.layout.activity_main);
 		batterySaving = false;
-		setActivityBackgroundColor(Color.WHITE);
+		setActivityBackgroundColor(Color.RED);
 		loadObjects();
 	}
 
@@ -70,6 +70,7 @@ public class MainActivity extends Activity {
 				} else {
 					i = new Intent(thisCtx, MapActivity.class);
 				}
+				i.putExtra("BATTERY_MODE", batterySaving);
 				startActivity(i);
 			}
 		});
@@ -87,6 +88,7 @@ public class MainActivity extends Activity {
 					Class<?> c = Class.forName(packageName + "."
 							+ "SchedListActivity");
 					Intent i = new Intent(thisCtx, c);
+					i.putExtra("BATTERY_MODE", batterySaving);
 					startActivity(i);
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -101,6 +103,7 @@ public class MainActivity extends Activity {
 
 			public void onClick(View arg0) {
 				Intent i = new Intent(thisCtx, AddCourseActivity.class);
+				i.putExtra("BATTERY_MODE", batterySaving);
 				startActivity(i);
 			}
 		});
@@ -113,13 +116,15 @@ public class MainActivity extends Activity {
 			public void onClick(View view) {
 				if (batterySaving) {
 					// Turn off battery savings
-					setActivityBackgroundColor(Color.WHITE);
+					setActivityBackgroundColor(Color.RED);
+					adjustBrightness(200);
 					Toast toast = Toast.makeText(getApplicationContext(),
 							"Battery Savings Off", Toast.LENGTH_SHORT);
 					toast.show();
 				} else {
 					// Turn on battery savings
 					setActivityBackgroundColor(Color.BLACK);
+					adjustBrightness(30);
 					Toast toast = Toast.makeText(getApplicationContext(),
 							"Battery Savings On", Toast.LENGTH_SHORT);
 					toast.show();
@@ -134,8 +139,10 @@ public class MainActivity extends Activity {
 		View view = this.getWindow().getDecorView();
 		view.setBackgroundColor(color);
 	}
-	
-	public void setActivityTextColor(int color) {
-		View view = this.getWindow().getDecorView();
+
+	public void adjustBrightness(int val) {
+		android.provider.Settings.System.putInt(this.getContentResolver(),
+				android.provider.Settings.System.SCREEN_BRIGHTNESS, val);
 	}
+
 }

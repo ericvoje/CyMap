@@ -9,6 +9,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -134,7 +135,16 @@ public class AddCourseActivity extends Activity {
 		addCourseView = (LinearLayout) inflator.inflate(R.layout.add_course,
 				null);
 		/* Sets the views details */
-		setViewDetails();
+		Intent i = getIntent();
+		boolean batterySaving = i.getBooleanExtra("BATTERY_MODE", false);
+		if (batterySaving) {
+			setActivityBackgroundColor(Color.BLACK);
+			adjustBrightness(30);
+		} else {
+			setActivityBackgroundColor(Color.RED);
+			adjustBrightness(200);
+		}
+		// setViewDetails();
 		setContentView(addCourseView);
 		loadObjects();
 		updateTime();
@@ -187,14 +197,14 @@ public class AddCourseActivity extends Activity {
 				+ '\t' + course.getsAMPM());
 		ePicktime.setText(course.geteHour() + ":" + format(course.geteMin())
 				+ '\t' + course.geteAMPM());
-		if(course.getsHour() == 0){
-			sPicktime.setText("12:" + format(course.getsMin())
-					+ '\t' + course.getsAMPM());
+		if (course.getsHour() == 0) {
+			sPicktime.setText("12:" + format(course.getsMin()) + '\t'
+					+ course.getsAMPM());
 		}
-		
-		if(course.geteHour() == 0){
-			ePicktime.setText("12:" + format(course.geteMin())
-					+ '\t' + course.geteAMPM());
+
+		if (course.geteHour() == 0) {
+			ePicktime.setText("12:" + format(course.geteMin()) + '\t'
+					+ course.geteAMPM());
 		}
 	}
 
@@ -359,5 +369,15 @@ public class AddCourseActivity extends Activity {
 				Toast.LENGTH_SHORT);
 		t.setGravity(Gravity.CENTER, 0, 0);
 		t.show();
+	}
+
+	public void setActivityBackgroundColor(int color) {
+		View view = this.getWindow().getDecorView();
+		view.setBackgroundColor(color);
+	}
+
+	public void adjustBrightness(int val) {
+		android.provider.Settings.System.putInt(this.getContentResolver(),
+				android.provider.Settings.System.SCREEN_BRIGHTNESS, val);
 	}
 }

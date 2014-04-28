@@ -1,10 +1,10 @@
 package com.iastate.se.cymap.activities;
 
 import java.util.LinkedList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -14,7 +14,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.iastate.se.cymap.R;
 
@@ -65,6 +64,8 @@ public class AltMapActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.alt_map_layout);
+
+		adjustBrightness(30);
 
 		thisCtx = this;
 		loadObjects();
@@ -277,6 +278,11 @@ public class AltMapActivity extends Activity {
 
 			drawPoint(buildings.get(i), color);
 		}
+	}
+
+	public void adjustBrightness(int val) {
+		android.provider.Settings.System.putInt(this.getContentResolver(),
+				android.provider.Settings.System.SCREEN_BRIGHTNESS, val);
 	}
 
 	/*

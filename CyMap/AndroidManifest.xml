@@ -15,6 +15,7 @@
         android:name="com.iastate.se.cymap.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

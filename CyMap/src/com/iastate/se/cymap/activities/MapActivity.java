@@ -47,6 +47,8 @@ public class MapActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_layout);
 
+		adjustBrightness(200);
+
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 				.getMap();
 
@@ -123,5 +125,10 @@ public class MapActivity extends Activity {
 			}
 
 		});
+	}
+
+	public void adjustBrightness(int val) {
+		android.provider.Settings.System.putInt(this.getContentResolver(),
+				android.provider.Settings.System.SCREEN_BRIGHTNESS, val);
 	}
 }
