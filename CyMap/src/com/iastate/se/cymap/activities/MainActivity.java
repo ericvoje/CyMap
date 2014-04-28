@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 /**
  * Note: Do not set the content view of each activity from this page. The
@@ -20,9 +22,12 @@ import android.widget.Button;
  */
 public class MainActivity extends Activity {
 
+	private boolean batterySaving;
+
 	private Button btnMap;
 	private Button btnViewSched;
 	private Button btnAddApt;
+	private Button btnBatteryMode;
 
 	private Context thisCtx;
 
@@ -31,6 +36,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		thisCtx = this;
 		setContentView(R.layout.activity_main);
+		batterySaving = false;
+		setActivityBackgroundColor(Color.WHITE);
 		loadObjects();
 	}
 
@@ -48,14 +55,21 @@ public class MainActivity extends Activity {
 		btnMap = (Button) findViewById(R.id.btnMap);
 		btnViewSched = (Button) findViewById(R.id.btnViewSched);
 		btnAddApt = (Button) findViewById(R.id.btnAddApt);
+		btnBatteryMode = (Button) findViewById(R.id.btnBatteryMode);
 
 		/**
 		 * Sets the on click listener for the Map class
 		 */
 		btnMap.setOnClickListener(new OnClickListener() {
 
-			public void onClick(View arg0) {
-				Intent i = new Intent(thisCtx, MapActivity.class);
+			public void onClick(View view) {
+				// Start MapActivity based on battery mode
+				Intent i;
+				if (batterySaving) {
+					i = new Intent(thisCtx, AltMapActivity.class);
+				} else {
+					i = new Intent(thisCtx, MapActivity.class);
+				}
 				startActivity(i);
 			}
 		});
@@ -90,5 +104,38 @@ public class MainActivity extends Activity {
 				startActivity(i);
 			}
 		});
+
+		/**
+		 * Sets the on click listener for the Battery savings toggle
+		 */
+		btnBatteryMode.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View view) {
+				if (batterySaving) {
+					// Turn off battery savings
+					setActivityBackgroundColor(Color.WHITE);
+					Toast toast = Toast.makeText(getApplicationContext(),
+							"Battery Savings Off", Toast.LENGTH_SHORT);
+					toast.show();
+				} else {
+					// Turn on battery savings
+					setActivityBackgroundColor(Color.BLACK);
+					Toast toast = Toast.makeText(getApplicationContext(),
+							"Battery Savings On", Toast.LENGTH_SHORT);
+					toast.show();
+				}
+				batterySaving = !batterySaving;
+			}
+		});
+
+	}
+
+	public void setActivityBackgroundColor(int color) {
+		View view = this.getWindow().getDecorView();
+		view.setBackgroundColor(color);
+	}
+	
+	public void setActivityTextColor(int color) {
+		View view = this.getWindow().getDecorView();
 	}
 }
